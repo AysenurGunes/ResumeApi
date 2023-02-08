@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ResumeApi.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,11 +10,17 @@ namespace ResumeApi.Controllers
     [ApiController]
     public class CityController : ControllerBase
     {
+        private readonly ResumeDbContext _context;
+        public CityController(ResumeDbContext context)
+        {
+            _context = context;
+        }
         // GET: api/<CityController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<List<City>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var cities= _context.Cities.ToListAsync();
+            return await cities;
         }
 
         // GET api/<CityController>/5
