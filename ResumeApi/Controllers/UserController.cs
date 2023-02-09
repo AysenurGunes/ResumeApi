@@ -3,7 +3,6 @@ using ResumeApi.Helper;
 using ResumeApi.Models;
 using System.Collections.Generic;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ResumeApi.Controllers
 {
@@ -32,39 +31,60 @@ namespace ResumeApi.Controllers
                 Password="12"
             } ,
         };
-
+        private readonly IConfiguration _configuration;
+        private readonly ResumeDbContext _context;
+        private ServiceResponse<User> response;
+        private ServiceResponse<List<User>> responses;
+        public UserController(IConfiguration configuration, ResumeDbContext context, ServiceResponse<User> serviceResponse, ServiceResponse<List<User>> serviceResponses)
+        {
+            response = serviceResponse;
+            responses = serviceResponses;
+            //for prod setting and dbconnection
+            _configuration = configuration;
+            _context = context;
+            
+        }
         [HttpGet]
         public ServiceResponse<List<User>> Get()
         {
-            ServiceResponse<List<User>> response = new ServiceResponse<List<User>>();
+
             try
             {
 
-                response.Data = users;
-                response.Success = true;
-                return response;
+                responses.Data = users;
+                responses.Success = true;
+                responses.actionResult = Ok();
+                return responses;
             }
             catch (Exception ex)
             {
-                response.Error = ex.ToString();
-                return response;
+                responses.Error = ex.ToString();
+                responses.actionResult = Problem();
+                return responses;
             }
         }
 
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public ServiceResponse<User> Get([FromQuery] int id)
         {
-            ServiceResponse<User> response = new ServiceResponse<User>();
+           
             try
             {
                 response.Data = users.Where(c => c.UserID == id).FirstOrDefault();
+                if (response.Data == null)
+                {
+                    response.actionResult = NoContent();
+                }
+                else
+                    response.actionResult = Ok();
                 response.Success = true;
                 return response;
             }
             catch (Exception ex)
             {
                 response.Error = ex.ToString();
+                response.actionResult = Problem();
                 return response;
             }
         }
@@ -73,17 +93,19 @@ namespace ResumeApi.Controllers
         [HttpPost]
         public ServiceResponse<User> Post([FromBody] User user)
         {
-            ServiceResponse<User> response = new ServiceResponse<User>();
+           
             try
             {
                 users.Add(user);
                 response.Data = user;
                 response.Success = true;
+                response.actionResult = Ok();
                 return response;
             }
             catch (Exception ex)
             {
                 response.Error = ex.ToString();
+                response.actionResult = Problem();
                 return response;
             }
         }
@@ -92,7 +114,7 @@ namespace ResumeApi.Controllers
         [HttpPut("{id}")]
         public ServiceResponse<User> Put(int id, [FromBody] User user)
         {
-            ServiceResponse<User> response = new ServiceResponse<User>();
+            
             try
             {
                 User user1 = users.Where(c => c.UserID == id).FirstOrDefault();
@@ -104,31 +126,35 @@ namespace ResumeApi.Controllers
 
                 response.Data = user;
                 response.Success = true;
+                response.actionResult = Ok();
                 return response;
             }
             catch (Exception ex)
             {
                 response.Error = ex.ToString();
+                response.actionResult = Problem();
                 return response;
             }
         }
 
 
         [HttpDelete("{id}")]
-        public ServiceResponse<ActionResult> Delete(int id)
+        public ServiceResponse<User> Delete(int id)
         {
-            ServiceResponse<ActionResult> response = new ServiceResponse<ActionResult>();
+            
             try
             {
-                users.RemoveAt(c => c.UserID == id);
+                users.Remove(users.Where(c => c.UserID == id).FirstOrDefault());
 
-                response.Data = Ok();
+
                 response.Success = true;
+                response.actionResult = Ok();
                 return response;
             }
             catch (Exception ex)
             {
                 response.Error = ex.ToString();
+                response.actionResult = Problem();
                 return response;
             }
         }

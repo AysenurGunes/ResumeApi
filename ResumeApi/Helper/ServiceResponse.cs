@@ -1,4 +1,6 @@
-﻿namespace ResumeApi.Helper
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace ResumeApi.Helper
 {
     public class ServiceResponse<TEntity>
     {
@@ -20,5 +22,6 @@
         public TEntity? Data { get; set; }
         public bool Success { get; set; }
         public string Error { get; set; }
+        public ActionResult actionResult { get; set; }
     }
 }
