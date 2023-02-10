@@ -33,59 +33,59 @@ namespace ResumeApi.Controllers
         };
        private readonly IConfiguration _configuration;
         private readonly ResumeDbContext _context;
-        //private ServiceResponse<User> response;
-        private ServiceResponse<User> responses;
-        public UserController(IConfiguration configuration, ResumeDbContext context,ServiceResponse<User> serviceResponses)
+        private ServiceResponse<User> response;
+      
+        public UserController(IConfiguration configuration, ResumeDbContext context,ServiceResponse<User> serviceResponse)
         {
-            //response = serviceResponse;
-            responses = serviceResponses;
+            response = serviceResponse;
+            
             //for prod setting and dbconnection
             _configuration = configuration;
             _context = context;
 
         }
-        [HttpGet]
-        public ServiceResponse<User> Get()
+        [HttpGet("GetAll")]
+        public ServiceResponse<List<User>> GetAll()
         {
-            //ServiceResponse<List<User>> responses2 = new ServiceResponse<List<User>>(users );
+            ServiceResponse<List<User>> responses2 = new ServiceResponse<List<User>>();//it is bug i need search
             try
             {
-               
-               // responses.Data = users;
-                responses.Success = true;
-                responses.statusCode = StatusCodes.Status200OK;
-                return responses;
+
+                responses2.Data = users;
+                responses2.Success = true;
+                responses2.statusCode = StatusCodes.Status200OK;
+                return responses2;
             }
             catch (Exception ex)
             {
-                responses.Error = ex.ToString();
-                responses.statusCode = StatusCodes.Status400BadRequest; ;
-                return responses;
+                responses2.Error = ex.ToString();
+                responses2.statusCode = StatusCodes.Status400BadRequest; ;
+                return responses2;
             }
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("GetByID")]
         public ServiceResponse<User> Get([FromQuery] int id)
         {
              //ServiceResponse<User> response=new ServiceResponse<User>();
             try
             {
-                responses.Data = users.Where(c => c.UserID == id).FirstOrDefault();
-                if (responses.Data == null)
+                response.Data = users.Where(c => c.UserID == id).FirstOrDefault();
+                if (response.Data == null)
                 {
-                    responses.statusCode =StatusCodes.Status204NoContent;
+                    response.statusCode =StatusCodes.Status204NoContent;
                 }
                 else
-                    responses.statusCode = StatusCodes.Status200OK;
-                responses.Success = true;
-                return responses;
+                    response.statusCode = StatusCodes.Status200OK;
+                response.Success = true;
+                return response;
             }
             catch (Exception ex)
             {
-                responses.Error = ex.ToString();
-                responses.statusCode = StatusCodes.Status400BadRequest;
-                return responses;
+                response.Error = ex.ToString();
+                response.statusCode = StatusCodes.Status400BadRequest;
+                return response;
             }
         }
 
@@ -93,7 +93,7 @@ namespace ResumeApi.Controllers
         [HttpPost]
         public ServiceResponse<User> Post([FromBody] User user)
         {
-            ServiceResponse<User> response = new ServiceResponse<User>();
+           // ServiceResponse<User> response = new ServiceResponse<User>();
             try
             {
                 users.Add(user);
@@ -114,7 +114,7 @@ namespace ResumeApi.Controllers
         [HttpPut("{id}")]
         public ServiceResponse<User> Put(int id, [FromBody] User user)
         {
-            ServiceResponse<User> response = new ServiceResponse<User>();
+           // ServiceResponse<User> response = new ServiceResponse<User>();
             try
             {
                 User user1 = users.Where(c => c.UserID == id).FirstOrDefault();
@@ -141,7 +141,7 @@ namespace ResumeApi.Controllers
         [HttpDelete("{id}")]
         public ServiceResponse<User> Delete(int id)
         {
-            ServiceResponse<User> response = new ServiceResponse<User>();
+           // ServiceResponse<User> response = new ServiceResponse<User>();
             try
             {
                 users.Remove(users.Where(c => c.UserID == id).FirstOrDefault());
