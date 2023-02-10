@@ -22,6 +22,6 @@ namespace ResumeApi.Helper
         public TEntity? Data { get; set; }
         public bool Success { get; set; }
         public string Error { get; set; }
-        public ActionResult actionResult { get; set; }
+        public int statusCode { get; set; }
     }
 }

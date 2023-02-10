@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using ResumeApi.Helper;
 using ResumeApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ResumeDbContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddSingleton<ServiceResponse<User>>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,5 +25,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseLogging();
 app.Run();

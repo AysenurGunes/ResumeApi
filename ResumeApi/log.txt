@@ -1,0 +1,8 @@
+GET /api/User=>200
+GET /api/User=>200
+GET /api/User=>200
+GET /api/User=>200
+GET /api/User/1=>200
+GET /api/User/1=>200
+GET /WeatherForecast=>200
+GET /WeatherForecast/1=>404

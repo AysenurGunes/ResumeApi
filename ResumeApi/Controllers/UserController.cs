@@ -31,35 +31,35 @@ namespace ResumeApi.Controllers
                 Password="12"
             } ,
         };
-        private readonly IConfiguration _configuration;
+       private readonly IConfiguration _configuration;
         private readonly ResumeDbContext _context;
-        private ServiceResponse<User> response;
-        private ServiceResponse<List<User>> responses;
-        public UserController(IConfiguration configuration, ResumeDbContext context, ServiceResponse<User> serviceResponse, ServiceResponse<List<User>> serviceResponses)
+        //private ServiceResponse<User> response;
+        private ServiceResponse<User> responses;
+        public UserController(IConfiguration configuration, ResumeDbContext context,ServiceResponse<User> serviceResponses)
         {
-            response = serviceResponse;
+            //response = serviceResponse;
             responses = serviceResponses;
             //for prod setting and dbconnection
             _configuration = configuration;
             _context = context;
-            
+
         }
         [HttpGet]
-        public ServiceResponse<List<User>> Get()
+        public ServiceResponse<User> Get()
         {
-
+            //ServiceResponse<List<User>> responses2 = new ServiceResponse<List<User>>(users );
             try
             {
-
-                responses.Data = users;
+               
+               // responses.Data = users;
                 responses.Success = true;
-                responses.actionResult = Ok();
+                responses.statusCode = StatusCodes.Status200OK;
                 return responses;
             }
             catch (Exception ex)
             {
                 responses.Error = ex.ToString();
-                responses.actionResult = Problem();
+                responses.statusCode = StatusCodes.Status400BadRequest; ;
                 return responses;
             }
         }
@@ -68,24 +68,24 @@ namespace ResumeApi.Controllers
         [HttpGet("{id}")]
         public ServiceResponse<User> Get([FromQuery] int id)
         {
-           
+             //ServiceResponse<User> response=new ServiceResponse<User>();
             try
             {
-                response.Data = users.Where(c => c.UserID == id).FirstOrDefault();
-                if (response.Data == null)
+                responses.Data = users.Where(c => c.UserID == id).FirstOrDefault();
+                if (responses.Data == null)
                 {
-                    response.actionResult = NoContent();
+                    responses.statusCode =StatusCodes.Status204NoContent;
                 }
                 else
-                    response.actionResult = Ok();
-                response.Success = true;
-                return response;
+                    responses.statusCode = StatusCodes.Status200OK;
+                responses.Success = true;
+                return responses;
             }
             catch (Exception ex)
             {
-                response.Error = ex.ToString();
-                response.actionResult = Problem();
-                return response;
+                responses.Error = ex.ToString();
+                responses.statusCode = StatusCodes.Status400BadRequest;
+                return responses;
             }
         }
 
@@ -93,19 +93,19 @@ namespace ResumeApi.Controllers
         [HttpPost]
         public ServiceResponse<User> Post([FromBody] User user)
         {
-           
+            ServiceResponse<User> response = new ServiceResponse<User>();
             try
             {
                 users.Add(user);
                 response.Data = user;
                 response.Success = true;
-                response.actionResult = Ok();
+                response.statusCode = StatusCodes.Status200OK;
                 return response;
             }
             catch (Exception ex)
             {
                 response.Error = ex.ToString();
-                response.actionResult = Problem();
+                response.statusCode = StatusCodes.Status400BadRequest;
                 return response;
             }
         }
@@ -114,7 +114,7 @@ namespace ResumeApi.Controllers
         [HttpPut("{id}")]
         public ServiceResponse<User> Put(int id, [FromBody] User user)
         {
-            
+            ServiceResponse<User> response = new ServiceResponse<User>();
             try
             {
                 User user1 = users.Where(c => c.UserID == id).FirstOrDefault();
@@ -126,13 +126,13 @@ namespace ResumeApi.Controllers
 
                 response.Data = user;
                 response.Success = true;
-                response.actionResult = Ok();
+                response.statusCode = StatusCodes.Status200OK;
                 return response;
             }
             catch (Exception ex)
             {
                 response.Error = ex.ToString();
-                response.actionResult = Problem();
+                response.statusCode = StatusCodes.Status400BadRequest;
                 return response;
             }
         }
@@ -141,20 +141,20 @@ namespace ResumeApi.Controllers
         [HttpDelete("{id}")]
         public ServiceResponse<User> Delete(int id)
         {
-            
+            ServiceResponse<User> response = new ServiceResponse<User>();
             try
             {
                 users.Remove(users.Where(c => c.UserID == id).FirstOrDefault());
 
 
                 response.Success = true;
-                response.actionResult = Ok();
+                response.statusCode = StatusCodes.Status200OK;
                 return response;
             }
             catch (Exception ex)
             {
                 response.Error = ex.ToString();
-                response.actionResult = Problem();
+                response.statusCode = StatusCodes.Status400BadRequest;
                 return response;
             }
         }
