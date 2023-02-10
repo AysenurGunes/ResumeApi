@@ -11,3 +11,7 @@ GET /api/User/GetByID=>200
 GET /api/User/GetAll=>200
 GET /api/User/GetAll=>200
 GET /api/User/GetByID=>200
+GET /api/User/GetOrderByName=>200
+GET /api/User/GetAll=>200
+GET /api/User/GetSearchByName=>200
+GET /api/User/GetSearchByName=>200

@@ -88,8 +88,52 @@ namespace ResumeApi.Controllers
                 return response;
             }
         }
-
-
+        [HttpGet("GetOrderByName")]
+        public ServiceResponse<List<User>> Get()
+        {
+            ServiceResponse<List<User>> responses2 = new ServiceResponse<List<User>>();//it is bug i need search
+            try
+            {
+                responses2.Data = users.OrderBy(c => c.Name).ToList();
+                if (responses2.Data == null)
+                {
+                    responses2.statusCode = StatusCodes.Status204NoContent;
+                }
+                else
+                    responses2.statusCode = StatusCodes.Status200OK;
+                responses2.Success = true;
+                return responses2;
+            }
+            catch (Exception ex)
+            {
+                responses2.Error = ex.ToString();
+                responses2.statusCode = StatusCodes.Status400BadRequest;
+                return responses2;
+            }
+        }
+        [HttpGet("GetSearchByName")]
+        public ServiceResponse<List<User>> Get([FromQuery] string name)
+        {
+            ServiceResponse<List<User>> responses2 = new ServiceResponse<List<User>>();//it is bug i need search
+            try
+            {
+                responses2.Data = users.Where(c => c.Name.Contains(name)).ToList();
+                if (responses2.Data == null)
+                {
+                    responses2.statusCode = StatusCodes.Status204NoContent;
+                }
+                else
+                    responses2.statusCode = StatusCodes.Status200OK;
+                responses2.Success = true;
+                return responses2;
+            }
+            catch (Exception ex)
+            {
+                responses2.Error = ex.ToString();
+                responses2.statusCode = StatusCodes.Status400BadRequest;
+                return responses2;
+            }
+        }
         [HttpPost]
         public ServiceResponse<User> Post([FromBody] User user)
         {
