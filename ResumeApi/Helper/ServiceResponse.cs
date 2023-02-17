@@ -23,5 +23,27 @@ namespace ResumeApi.Helper
         public bool Success { get; set; }
         public string Error { get; set; }
         public int statusCode { get; set; }
+       
     }
+
 }
+//public class ServiceResponse2
+//{
+  
+//    public bool Success { get; set; }
+//    public string Error { get; set; }
+//    public int statusCode { get; set; }
+//    public string Data2 { get; set; }
+//    public ServiceResponse2()
+//    {
+
+//    }
+//    public ServiceResponse2(string data)
+//    {
+//        Data2 = data;
+//    }
+
+   
+
+    
+//}
